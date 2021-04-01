@@ -1,4 +1,8 @@
 QT -= qt core gui
 
+HEADERS += \
+    shader_load.h
+
 SOURCES += \
-        main.c
+        main.c \
+        shader_load.c
