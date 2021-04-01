@@ -32,7 +32,7 @@ file_size(const char *fpath) {
     return -1;
   }
   if (!S_ISREG(l.st_mode)) {
-    return -E_NOT_FILE;
+    return -GFXDEMO_E_NOT_FILE;
   }
   return l.st_size;
 }
@@ -41,7 +41,7 @@ file_size(const char *fpath) {
 int
 check_size_error(long result, const char *fn) {
   if (result < 0) {
-    if (result == -E_NOT_FILE) {
+    if (result == -GFXDEMO_E_NOT_FILE) {
       fprintf(stderr, "Target %s is not a file\n", fn);
       return 2;
     }

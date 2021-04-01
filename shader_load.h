@@ -1,12 +1,12 @@
 
-#ifndef SHADER_LOAD_H_
-#define SHADER_LOAD_H_
+#ifndef GFXDEMO_SHADER_LOAD_H_
+#define GFXDEMO_SHADER_LOAD_H_
 
 
 #include <sys/types.h>
 
 
-#define E_NOT_FILE 2
+#define GFXDEMO_E_NOT_FILE 2
 
 
 struct shader_desc {
@@ -45,4 +45,4 @@ compile_shaders(const struct shader_desc *shaders,
                 unsigned int shaders_count);
 
 
-#endif /* SHADER_LOAD_H_ */
+#endif /* GFXDEMO_SHADER_LOAD_H_ */

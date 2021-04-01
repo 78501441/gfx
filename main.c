@@ -46,6 +46,10 @@ main(void) {
     exit(EXIT_FAILURE);
   }
 
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
   GLFWwindow *main_window = main_prepare_window("GL", 400, 400);
   if (main_window == NULL) {
     glfwTerminate();
@@ -73,7 +77,16 @@ main(void) {
 
   glewInit();
 
-  bind_new_buffer(positions, sizeof(positions));
+  /* NB: Compat. OpenGL profile generates one (default)
+   * Vertex Array Object (vao) for us. Core profile does not.
+   * So we have to create it.
+   */
+
+  unsigned int vao;
+  glGenVertexArrays(1, &vao);
+  glBindVertexArray(vao);
+
+  unsigned int buffer_id = bind_new_buffer(positions, sizeof(positions));
 
   glVertexAttribPointer(0,                 /* Attribute index.                */
                         3,                 /* Number of components per vertex */
@@ -86,8 +99,8 @@ main(void) {
   current_offsets.y_offset = 0.0f;
   current_offsets.z_offset = 0.0f;
 
-  current_offsets.offset_location =
-      glGetUniformLocation(main_prepare_shaders(), "pos_offset");
+  unsigned int p = main_prepare_shaders();
+  current_offsets.offset_location = glGetUniformLocation(p, "pos_offset");
 
   while (!glfwWindowShouldClose(main_window)) {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -111,6 +124,10 @@ main(void) {
     glfwSwapBuffers(main_window);
     glfwPollEvents();
   }
+
+  glDeleteProgram(p);
+  glDeleteBuffers(1, &buffer_id);
+  glDeleteVertexArrays(1, &vao);
 
   glfwTerminate();
 
