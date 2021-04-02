@@ -1,4 +1,4 @@
-COMPILER=gcc
+COMPILER=tcc
 LINKER=ld
 CFLAGS=-Wall -g
 LIBS=-lm -lGL -lGLU -lGLEW -ldl -lX11 -lpthread

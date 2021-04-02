@@ -1,4 +1,4 @@
-﻿
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -24,6 +24,18 @@ struct move_uniform {
 
 unsigned int
 bind_new_buffer(const void *data, int data_size);
+
+
+#ifndef NO_DEBUG
+void
+gl_error_callback(unsigned int source,
+                  unsigned int type,
+                  unsigned int id,
+                  unsigned int severity,
+                  int len,
+                  const char *message,
+                  const void *user_ptr);
+#endif
 
 
 void
@@ -76,6 +88,11 @@ main(void) {
   };
 
   glewInit();
+
+#ifndef NO_DEBUG
+  glEnable(GL_DEBUG_OUTPUT);
+  glDebugMessageCallback(gl_error_callback, NULL);
+#endif
 
   /* NB: Compat. OpenGL profile generates one (default)
    * Vertex Array Object (vao) for us. Core profile does not.
@@ -239,3 +256,29 @@ main_prepare_shaders() {
 
   return program;
 }
+
+
+#ifndef NO_DEBUG
+void
+gl_error_callback(unsigned int source,
+                  unsigned int type,
+                  unsigned int id,
+                  unsigned int severity,
+                  int len,
+                  const char *message,
+                  const void *user_ptr) {
+
+  fprintf(stderr,
+          "GL CALLBACK: %s (0x%x) Severity 0x%x: \"%s\"\n",
+          (type == GL_DEBUG_TYPE_ERROR ? "[Error]" : "[Debug]"),
+          type,
+          severity,
+          message);
+
+  UNUSED(source)
+  UNUSED(id)
+  UNUSED(len)
+  UNUSED(user_ptr)
+
+}
+#endif
