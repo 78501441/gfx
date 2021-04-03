@@ -4,4 +4,5 @@ uniform vec4 pos_offset;
 void main() {
     gl_Position = pos + pos_offset;
     gl_Position.y *= -1.0f;
+    gl_Position.w = pos.w + pos_offset.w;
 }

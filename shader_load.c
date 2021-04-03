@@ -1,55 +1,10 @@
 
 #include <alloca.h>
-#include <errno.h>
-#include <fcntl.h>
 #include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-
-#include <sys/stat.h>
 
 #include "shader_load.h"
 
 #include "include/GL/glew.h"
-
-
-ssize_t
-read_file(const char *fn, char *buf, size_t buflen) {
-  int fd = open(fn, O_RDONLY);
-  if (fd == -1) {
-    return -1;
-  }
-  ssize_t r = read(fd, buf, buflen);
-  close(fd);
-  return r;
-}
-
-
-long
-file_size(const char *fpath) {
-  struct stat l;
-  if (stat(fpath, &l) == -1) {
-    return -1;
-  }
-  if (!S_ISREG(l.st_mode)) {
-    return -GFXDEMO_E_NOT_FILE;
-  }
-  return l.st_size;
-}
-
-
-int
-check_size_error(long result, const char *fn) {
-  if (result < 0) {
-    if (result == -GFXDEMO_E_NOT_FILE) {
-      fprintf(stderr, "Target %s is not a file\n", fn);
-      return 2;
-    }
-    fprintf(stderr, "Unable to stat %s: %s\n", fn, strerror(errno));
-    return 1;
-  }
-  return 0;
-}
 
 
 unsigned int
@@ -99,7 +54,9 @@ compile_shaders(const struct shader_desc *shaders,
       fprintf(stderr, "Program linking error:\n%s\n", log);
     }
   }
+#ifndef NO_DEBUG
   glValidateProgram(program);
+#endif
 
   return program;
 
