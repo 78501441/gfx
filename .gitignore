@@ -1,4 +1,6 @@
 static_lib
+ext
+build
 gfx_demo
 *.o
 *.pro.user

@@ -3,15 +3,11 @@
 #define GFXDEMO_SHADER_LOAD_H_
 
 
-struct shader_desc {
-  unsigned int type;
-  const char *source;
-  const char *name;
-};
+#include "programs_list.h"
 
 
 unsigned int
-compile_shaders(const struct shader_desc *shaders,
+compile_shaders(const struct shader_source *sources,
                 unsigned int shaders_count);
 
 
