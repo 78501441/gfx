@@ -7,20 +7,20 @@
 #define DEFAULT_INITIAL_CAPACITY 4
 
 void
-dyn_init(struct dynarray* darr, size_t element_size)
+dyn_init(struct dynarray *darr, size_t element_size)
 {
-  darr->capacity = DEFAULT_INITIAL_CAPACITY;
-  darr->count = 0;
+  darr->capacity     = DEFAULT_INITIAL_CAPACITY;
+  darr->count        = 0;
   darr->element_size = element_size;
-  darr->data = malloc(element_size * darr->capacity);
+  darr->data         = malloc(element_size * darr->capacity);
 }
 
 void
-dyn_append(struct dynarray* darr, const void* element)
+dyn_append(struct dynarray *darr, const void *element)
 {
   darr->count += 1;
-  if(darr->count > darr->capacity) {
-    darr->data = realloc(darr->data, darr->count * darr->element_size);
+  if (darr->count > darr->capacity) {
+    darr->data     = realloc(darr->data, darr->count * darr->element_size);
     darr->capacity = darr->count;
   }
   memcpy(darr->data + (darr->count - 1) * darr->element_size,
@@ -29,13 +29,13 @@ dyn_append(struct dynarray* darr, const void* element)
 }
 
 void
-dyn_release(struct dynarray* darr)
+dyn_release(struct dynarray *darr)
 {
-  if(darr->data) {
+  if (darr->data) {
     free(darr->data);
-    darr->data = NULL;
-    darr->capacity = 0;
-    darr->count = 0;
+    darr->data         = NULL;
+    darr->capacity     = 0;
+    darr->count        = 0;
     darr->element_size = 0;
   }
 }

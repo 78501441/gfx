@@ -4,7 +4,7 @@
 #include "gl_primitives.h"
 
 unsigned int
-bind_new_buffer(const void* data, int data_size)
+bind_new_buffer(const void *data, int data_size)
 {
   unsigned int id = 0;
   glGenBuffers(1, &id);
@@ -16,7 +16,7 @@ bind_new_buffer(const void* data, int data_size)
 void
 new_vertex_attrib_pointerf(unsigned int attr_index,
                            unsigned int vertex_attrib_count,
-                           const void* attrib_offset)
+                           unsigned long attrib_offset)
 {
 
   glVertexAttribPointer(attr_index,
@@ -24,7 +24,7 @@ new_vertex_attrib_pointerf(unsigned int attr_index,
                         GL_FLOAT,
                         GL_FALSE,
                         sizeof(float) * vertex_attrib_count,
-                        attrib_offset);
+                        (const void *)attrib_offset);
 
   glEnableVertexAttribArray(attr_index);
 }

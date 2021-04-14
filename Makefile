@@ -9,7 +9,11 @@ OBJTOOL_FLAGS=--input binary --output elf64-x86-64 --binary-architecture i386
 OUTPUT=gfx_demo
 
 
-all: $(OUTPUT)
+all: source_format $(OUTPUT)
+
+
+source_format:
+	clang-format -i src/*.c src/*.h
 
 
 $(OUTPUT): $(OBJECTS)

@@ -1,0 +1,9 @@
+IndentWidth: 2
+UseTab: Never
+UseCRLF: false
+AlwaysBreakAfterReturnType: All
+PointerAlignment: Right
+BinPackArguments: false
+ColumnLimit: 80
+AlignConsecutiveAssignments: true
+BreakBeforeBraces: Linux

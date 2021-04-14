@@ -15,9 +15,9 @@ struct move_uniform {
 };
 
 struct default_renderer {
-  const void* box_data;
+  const void *box_data;
   size_t box_data_size;
-  const void* scene_data;
+  const void *scene_data;
   size_t scene_data_size;
 
   unsigned int box_vao;
@@ -31,19 +31,18 @@ struct default_renderer {
 };
 
 void
-renderer_init(struct default_renderer* state);
+renderer_init(struct default_renderer *state);
 
 void
-renderer_prepare(struct default_renderer* state);
+renderer_prepare(struct default_renderer *state);
 
 void
-renderer_render_scene(struct default_renderer* state);
+renderer_render_scene(struct default_renderer *state);
 
 void
-renderer_mark_scene_dirty(struct default_renderer* state,
-                          vec_change_type direction,
-                          float val);
+renderer_move(struct default_renderer *state, vec_change_type direction,
+              float val);
 
 /* Side: -1 - left, 1 - right per 10 degrees. */
 void
-renderer_rotate(struct default_renderer* state, int side);
+renderer_rotate(struct default_renderer *state, int side);
