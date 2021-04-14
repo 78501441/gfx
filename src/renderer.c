@@ -1,10 +1,10 @@
 
 #include <alloca.h>
-#include <math.h>
 #include <string.h>
 
 #include "../include/GL/glew.h"
 
+#include "gfx_math.h"
 #include "gl_primitives.h"
 #include "programs_list.h"
 #include "resource.h"
@@ -24,26 +24,6 @@ gl_error_callback(unsigned int source, unsigned int type, unsigned int id,
 
 static unsigned int
 prepare_shaders();
-
-static void
-get_identity_matrix(float *mptr)
-{
-  memset(mptr, 0, sizeof(float) * 4 * 4);
-  int j = 0;
-  for (int i = 0; i < 4; ++i) {
-    (&mptr[i * 4])[j] = 1.2f;
-    ++j;
-  }
-}
-
-static void
-rotate_matrix_z(float *mptr, float angle)
-{
-  mptr[0] = cosf(angle);
-  mptr[1] = -sinf(angle);
-  mptr[4] = sinf(angle);
-  mptr[5] = cosf(angle);
-}
 
 void
 renderer_init(struct default_renderer *state)
@@ -105,15 +85,15 @@ renderer_render_scene(struct default_renderer *state)
                 state->move_vec.z_offset,
                 0.0f);
 
-    float idm[16];
-    get_identity_matrix(idm);
+    mat4x4 opm;
+    get_idenitity_matrix(opm);
 
     if (state->move_vec.rotation != 0.0f)
-      rotate_matrix_z(idm, state->move_vec.rotation);
+      get_rotation_matrix_z(opm, state->move_vec.rotation);
 
     int loc =
         glGetUniformLocation(state->scene_shaders, "transformation_matrix");
-    glUniformMatrix4fv(loc, 1, GL_FALSE, idm);
+    glUniformMatrix4fv(loc, 1, GL_FALSE, (const float *)opm);
 
     state->move_vec.modified = 0;
   }
@@ -189,9 +169,9 @@ renderer_rotate(struct default_renderer *state, int side)
 {
   float angle_delta = 0.0f;
   if (side == 1) {
-    angle_delta = M_PI / 36.0f;
+    angle_delta = deg_to_rad(10.0f);
   } else if (side == -1) {
-    angle_delta = -M_PI / 36.0f;
+    angle_delta = deg_to_rad(-10.0f);
   }
   if (angle_delta != 0.0f) {
     state->move_vec.rotation += angle_delta;
