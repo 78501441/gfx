@@ -4,6 +4,7 @@
 
 #include "../include/GL/glew.h"
 
+#include "dynarray.h"
 #include "gfx_math.h"
 #include "gl_primitives.h"
 #include "programs_list.h"
@@ -26,12 +27,18 @@ static unsigned int
 prepare_shaders();
 
 void
-renderer_init(struct default_renderer *state)
+renderer_init(struct gl_renderer *state, const void *scene_data,
+              unsigned long scene_data_size)
 {
   state->box_data        = box;
   state->box_data_size   = sizeof(box);
   state->scene_data      = positions;
   state->scene_data_size = sizeof(positions);
+
+  if (scene_data && scene_data_size) {
+    state->scene_data      = scene_data;
+    state->scene_data_size = scene_data_size;
+  }
 
   glewInit();
 
@@ -42,7 +49,7 @@ renderer_init(struct default_renderer *state)
 }
 
 void
-renderer_prepare(struct default_renderer *state)
+renderer_prepare(struct gl_renderer *state)
 {
   state->box_vao = bind_new_vertex_array();
   state->box_vbo = bind_new_buffer(state->box_data, state->box_data_size);
@@ -69,7 +76,7 @@ renderer_prepare(struct default_renderer *state)
 }
 
 void
-renderer_render_scene(struct default_renderer *state)
+renderer_render_scene(struct gl_renderer *state)
 {
 
   glClear(GL_COLOR_BUFFER_BIT);
@@ -105,8 +112,7 @@ renderer_render_scene(struct default_renderer *state)
 }
 
 void
-renderer_move(struct default_renderer *state, vec_change_type direction,
-              float val)
+renderer_move(struct gl_renderer *state, vec_change_type direction, float val)
 {
 
   float *ptr = NULL;
@@ -131,8 +137,9 @@ prepare_shaders()
   struct dynarray targets;
   dyn_init(&targets, sizeof(struct shader_source));
 
-  prepare_programs_list(
-      &targets, combined_data, combined_data_end - combined_data);
+  prepare_programs_list(&targets,
+                        combined_data,
+                        combined_data_end - combined_data);
 
   unsigned int program_id =
       compile_shaders((struct shader_source *)targets.data, targets.count);
@@ -165,7 +172,7 @@ gl_error_callback(unsigned int source, unsigned int type, unsigned int id,
 #endif
 
 void
-renderer_rotate(struct default_renderer *state, int side)
+renderer_rotate(struct gl_renderer *state, int side)
 {
   float angle_delta = 0.0f;
   if (side == 1) {

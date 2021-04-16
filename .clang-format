@@ -7,3 +7,6 @@ BinPackArguments: false
 ColumnLimit: 80
 AlignConsecutiveAssignments: true
 BreakBeforeBraces: Linux
+AlignAfterOpenBracket: Align
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false

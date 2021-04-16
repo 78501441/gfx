@@ -1,20 +1,18 @@
 
 #pragma once
 
-#include <sys/types.h>
-
 struct dynarray {
   void *data;
-  size_t capacity;
-  size_t count;
-  size_t element_size;
+  unsigned long capacity;
+  unsigned long count;
+  unsigned long element_size;
 };
 
 typedef struct dynarray *dyn_p;
 typedef const struct dynarray *dyn_cp;
 
 void
-dyn_init(struct dynarray *darr, size_t element_size);
+dyn_init(struct dynarray *darr, unsigned long element_size);
 
 void
 dyn_append(struct dynarray *darr, const void *element);

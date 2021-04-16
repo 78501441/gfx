@@ -1,6 +1,5 @@
 
-#ifndef SHADERS_DEF_H_
-#define SHADERS_DEF_H_
+#pragma once
 
 #define UNUSED(t) (void)t;
 
@@ -20,8 +19,8 @@ static const char aqua_shader_src_[] =
     "  out_color = vec4(0.0f, 0.75f, 0.58f, 0.0f);\n"
     "}\n";
 
-const float positions[] = {
-    0.0f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f};
+const float positions[] =
+    {0.0f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f};
 
 const float box[] = {
     /* Surrounding box. */
@@ -37,5 +36,3 @@ const float box[] = {
     -0.9f,
     -0.9f,
     0.0f};
-
-#endif

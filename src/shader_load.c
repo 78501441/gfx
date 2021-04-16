@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "dynarray.h"
+#include "programs_list.h"
 #include "shader_load.h"
 
 #include "../include/GL/glew.h"

@@ -5,8 +5,9 @@
 
 #include "programs_list.h"
 
-size_t
-prepare_programs_list(dyn_p storage, const char *blob_start, size_t blob_size)
+unsigned long
+prepare_programs_list(dyn_p storage, const char *blob_start,
+                      unsigned long blob_size)
 {
   const char shader_signature[] = "#shader";
   struct shader_source entry;
@@ -14,8 +15,10 @@ prepare_programs_list(dyn_p storage, const char *blob_start, size_t blob_size)
   const char *blob_end = blob_start + blob_size;
   while (1) {
 
-    spec = next_signature(
-        spec, blob_size, shader_signature, sizeof(shader_signature) - 1);
+    spec = next_signature(spec,
+                          blob_size,
+                          shader_signature,
+                          sizeof(shader_signature) - 1);
 
     if (!spec) {
 

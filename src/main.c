@@ -4,7 +4,11 @@
 
 #include "../include/GLFW/glfw3.h"
 
+#include "dynarray.h"
+#include "input.h"
 #include "renderer.h"
+
+#define CAST_VAR(varname, type, voidptr) type varname = (type)voidptr;
 
 void
 report_glfw_error(const char *err_template);
@@ -28,8 +32,12 @@ main(int argc, char **argv)
     exit(EXIT_FAILURE);
   }
   glfwMakeContextCurrent(main_window);
-  struct default_renderer r;
-  renderer_init(&r);
+  struct gl_renderer r;
+  struct dynarray coords;
+  read_coords("shape.txt", &coords);
+  renderer_init(&r,
+                coords.count ? coords.data : NULL,
+                coords.count * sizeof(struct coords));
   renderer_prepare(&r);
   glfwSetWindowUserPointer(main_window, &r);
   glfwSetKeyCallback(main_window, key_callback);
@@ -40,6 +48,8 @@ main(int argc, char **argv)
     glfwSwapBuffers(main_window);
     glfwPollEvents();
   }
+
+  dyn_release(&coords);
 
   glfwTerminate();
 }
@@ -57,8 +67,8 @@ key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
   if (action == GLFW_PRESS) {
 
-    struct default_renderer *r =
-        (struct default_renderer *)glfwGetWindowUserPointer(window);
+    CAST_VAR(r, struct gl_renderer *, glfwGetWindowUserPointer(window))
+
     if (!r)
       return;
     if (key == GLFW_KEY_ESCAPE) {

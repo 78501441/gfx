@@ -7,7 +7,7 @@
 #define DEFAULT_INITIAL_CAPACITY 4
 
 void
-dyn_init(struct dynarray *darr, size_t element_size)
+dyn_init(struct dynarray *darr, unsigned long element_size)
 {
   darr->capacity     = DEFAULT_INITIAL_CAPACITY;
   darr->count        = 0;
