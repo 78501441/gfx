@@ -1,4 +1,3 @@
-
 #include <alloca.h>
 #include <string.h>
 
@@ -32,8 +31,8 @@ renderer_init(struct gl_renderer *state, const void *scene_data,
 {
   state->box_data        = box;
   state->box_data_size   = sizeof(box);
-  state->scene_data      = positions;
-  state->scene_data_size = sizeof(positions);
+  state->scene_data      = tri_vertexes;
+  state->scene_data_size = sizeof(tri_vertexes);
 
   if (scene_data && scene_data_size) {
     state->scene_data      = scene_data;
@@ -53,25 +52,26 @@ renderer_prepare(struct gl_renderer *state)
 {
   state->box_vao = bind_new_vertex_array();
   state->box_vbo = bind_new_buffer(state->box_data, state->box_data_size);
-  new_vertex_attrib_pointerf(0, 3, 0);
+  new_vertex_attrib_pointerf(0, 3, 0, 0);
 
   state->scene_vao = bind_new_vertex_array();
   state->scene_vbo = bind_new_buffer(state->scene_data, state->scene_data_size);
-  new_vertex_attrib_pointerf(0, 3, 0);
+  new_vertex_attrib_pointerf(0, 3, sizeof(float) * 6, 0);
+  new_vertex_attrib_pointerf(1, 3, sizeof(float) * 6, sizeof(float) * 3);
 
   state->scene_shaders = prepare_shaders();
   glUseProgram(state->scene_shaders);
 
-  memset(&state->move_vec, 0, sizeof(struct move_uniform));
+  memset(&state->tr, 0, sizeof(struct translation));
 
-  state->move_vec.offset_location =
+  state->tr.offset_location =
       glGetUniformLocation(state->scene_shaders, "pos_offset");
 
-  state->move_vec.transform_location =
+  state->tr.transform_location =
       glGetUniformLocation(state->scene_shaders, "transformation_matrix");
 
   /* Setup initial scene to 0 moved and identity multiplied. */
-  state->move_vec.modified = flmod_move | flmod_rotation;
+  state->tr.modified = flmod_move | flmod_rotation;
 
   struct shader_source default_box_shaders[] = {
       {st_vertex, identity_shader_src_, sizeof(identity_shader_src_) - 1},
@@ -88,32 +88,32 @@ renderer_render_scene(struct gl_renderer *state)
   glBindVertexArray(state->scene_vao);
   glUseProgram(state->scene_shaders);
 
-  if (state->move_vec.modified) {
+  if (state->tr.modified) {
 
-    if (state->move_vec.modified & flmod_move) {
+    if (state->tr.modified & flmod_move) {
 
-      glUniform4f(state->move_vec.offset_location,
-                  state->move_vec.x_offset,
-                  state->move_vec.y_offset,
-                  state->move_vec.z_offset,
+      glUniform4f(state->tr.offset_location,
+                  state->tr.x_offset,
+                  state->tr.y_offset,
+                  state->tr.z_offset,
                   0.0f);
     }
 
-    if (state->move_vec.modified & flmod_rotation) {
+    if (state->tr.modified & flmod_rotation) {
 
       mat4x4 opm;
       get_idenitity_matrix(opm);
 
-      if (state->move_vec.rotation != 0.0f)
-        get_rotation_matrix_z(opm, state->move_vec.rotation);
+      if (state->tr.rotation != 0.0f)
+        get_rotation_matrix_z(opm, state->tr.rotation);
 
-      glUniformMatrix4fv(state->move_vec.transform_location,
+      glUniformMatrix4fv(state->tr.transform_location,
                          1,
                          GL_FALSE,
                          (const float *)opm);
     }
 
-    state->move_vec.modified = 0;
+    state->tr.modified = 0;
   }
   glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -129,15 +129,15 @@ renderer_move(struct gl_renderer *state, vec_change_type direction, float val)
   float *ptr = NULL;
 
   if (direction == x_changed) {
-    ptr = &state->move_vec.x_offset;
+    ptr = &state->tr.x_offset;
   } else if (direction == y_changed) {
-    ptr = &state->move_vec.y_offset;
+    ptr = &state->tr.y_offset;
   } else {
-    ptr = &state->move_vec.z_offset;
+    ptr = &state->tr.z_offset;
   }
 
   *ptr += val;
-  state->move_vec.modified |= flmod_move;
+  state->tr.modified |= flmod_move;
 }
 
 static unsigned int
@@ -191,7 +191,7 @@ renderer_rotate(struct gl_renderer *state, int side)
     angle_delta = deg_to_rad(-10.0f);
   }
   if (angle_delta != 0.0f) {
-    state->move_vec.rotation += angle_delta;
-    state->move_vec.modified |= flmod_rotation;
+    state->tr.rotation += angle_delta;
+    state->tr.modified |= flmod_rotation;
   }
 }

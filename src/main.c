@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -40,7 +39,7 @@ main(int argc, char **argv)
   read_coords("shape.txt", &coords);
   renderer_init(&r,
                 coords.count ? coords.data : NULL,
-                coords.count * sizeof(struct coords));
+                coords.count * sizeof(struct vertex_data));
   renderer_prepare(&r);
   glfwSetWindowUserPointer(main_window, &r);
   glfwSetKeyCallback(main_window, key_callback);

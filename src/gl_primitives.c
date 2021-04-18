@@ -16,17 +16,18 @@ bind_new_buffer(const void *data, int data_size)
 void
 new_vertex_attrib_pointerf(unsigned int attr_index,
                            unsigned int vertex_attrib_count,
+                           unsigned long attrib_stride,
                            unsigned long attrib_offset)
 {
+
+  glEnableVertexAttribArray(attr_index);
 
   glVertexAttribPointer(attr_index,
                         vertex_attrib_count,
                         GL_FLOAT,
                         GL_FALSE,
-                        sizeof(float) * vertex_attrib_count,
+                        attrib_stride,
                         (const void *)attrib_offset);
-
-  glEnableVertexAttribArray(attr_index);
 }
 
 unsigned int

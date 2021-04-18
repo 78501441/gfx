@@ -22,6 +22,31 @@ static const char aqua_shader_src_[] =
 const float positions[] =
     {0.0f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f};
 
+const float colors[] = {0.9f, 0.0f, 0.0f, 0.0f, 0.9f, 0.0f, 0.0f, 0.0f, 0.9f};
+
+const float tri_vertexes[] = {0.0f,
+                              0.5f,
+                              0.0f, /* Co-ords. */
+                              0.9f,
+                              0.0f,
+                              0.0f, /* Color. */
+
+                              0.5f,
+                              -0.5f,
+                              0.0f,
+                              0.0f,
+                              0.9f,
+                              0.0f,
+
+                              -0.5f,
+                              -0.5f,
+                              0.0f,
+                              0.0f,
+                              0.0f,
+                              0.9f
+
+};
+
 const float box[] = {
     /* Surrounding box. */
     -0.9f,

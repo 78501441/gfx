@@ -1,4 +1,3 @@
-
 #pragma once
 
 typedef enum { x_changed, y_changed, z_changed } vec_change_type;
@@ -7,7 +6,7 @@ enum modified_flags {
   flmod_rotation = 0x2,
 };
 
-struct move_uniform {
+struct translation {
   int modified;
   int offset_location;
   int transform_location;
@@ -30,7 +29,7 @@ struct gl_renderer {
   unsigned int box_shaders;
   unsigned int scene_shaders;
 
-  struct move_uniform move_vec;
+  struct translation tr;
 };
 
 void
