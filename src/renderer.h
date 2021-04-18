@@ -2,10 +2,15 @@
 #pragma once
 
 typedef enum { x_changed, y_changed, z_changed } vec_change_type;
+enum modified_flags {
+  flmod_move     = 0x1,
+  flmod_rotation = 0x2,
+};
 
 struct move_uniform {
   int modified;
   int offset_location;
+  int transform_location;
   float rotation;
   float x_offset;
   float y_offset;

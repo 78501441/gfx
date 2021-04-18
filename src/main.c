@@ -13,6 +13,8 @@
 void
 report_glfw_error(const char *err_template);
 
+static int is_animate;
+
 void
 key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
 
@@ -34,6 +36,7 @@ main(int argc, char **argv)
   glfwMakeContextCurrent(main_window);
   struct gl_renderer r;
   struct dynarray coords;
+  is_animate = 0;
   read_coords("shape.txt", &coords);
   renderer_init(&r,
                 coords.count ? coords.data : NULL,
@@ -42,8 +45,13 @@ main(int argc, char **argv)
   glfwSetWindowUserPointer(main_window, &r);
   glfwSetKeyCallback(main_window, key_callback);
 
+  float last_time = glfwGetTime();
   while (!glfwWindowShouldClose(main_window)) {
     glClear(GL_COLOR_BUFFER_BIT);
+    if (is_animate && glfwGetTime() - last_time >= 0.2) {
+      renderer_rotate(&r, 1);
+      last_time = glfwGetTime();
+    }
     renderer_render_scene(&r);
     glfwSwapBuffers(main_window);
     glfwPollEvents();
@@ -85,6 +93,8 @@ key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
       renderer_rotate(r, -1);
     } else if (key == GLFW_KEY_E) {
       renderer_rotate(r, 1);
+    } else if (key == GLFW_KEY_A) {
+      is_animate = 1 - is_animate;
     }
   }
 }

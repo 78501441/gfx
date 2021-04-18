@@ -67,7 +67,11 @@ renderer_prepare(struct gl_renderer *state)
   state->move_vec.offset_location =
       glGetUniformLocation(state->scene_shaders, "pos_offset");
 
-  glUniform4f(state->move_vec.offset_location, 0.0f, 0.0f, 0.0f, 0.0f);
+  state->move_vec.transform_location =
+      glGetUniformLocation(state->scene_shaders, "transformation_matrix");
+
+  /* Setup initial scene to 0 moved and identity multiplied. */
+  state->move_vec.modified = flmod_move | flmod_rotation;
 
   struct shader_source default_box_shaders[] = {
       {st_vertex, identity_shader_src_, sizeof(identity_shader_src_) - 1},
@@ -86,21 +90,28 @@ renderer_render_scene(struct gl_renderer *state)
 
   if (state->move_vec.modified) {
 
-    glUniform4f(state->move_vec.offset_location,
-                state->move_vec.x_offset,
-                state->move_vec.y_offset,
-                state->move_vec.z_offset,
-                0.0f);
+    if (state->move_vec.modified & flmod_move) {
 
-    mat4x4 opm;
-    get_idenitity_matrix(opm);
+      glUniform4f(state->move_vec.offset_location,
+                  state->move_vec.x_offset,
+                  state->move_vec.y_offset,
+                  state->move_vec.z_offset,
+                  0.0f);
+    }
 
-    if (state->move_vec.rotation != 0.0f)
-      get_rotation_matrix_z(opm, state->move_vec.rotation);
+    if (state->move_vec.modified & flmod_rotation) {
 
-    int loc =
-        glGetUniformLocation(state->scene_shaders, "transformation_matrix");
-    glUniformMatrix4fv(loc, 1, GL_FALSE, (const float *)opm);
+      mat4x4 opm;
+      get_idenitity_matrix(opm);
+
+      if (state->move_vec.rotation != 0.0f)
+        get_rotation_matrix_z(opm, state->move_vec.rotation);
+
+      glUniformMatrix4fv(state->move_vec.transform_location,
+                         1,
+                         GL_FALSE,
+                         (const float *)opm);
+    }
 
     state->move_vec.modified = 0;
   }
@@ -126,8 +137,7 @@ renderer_move(struct gl_renderer *state, vec_change_type direction, float val)
   }
 
   *ptr += val;
-
-  state->move_vec.modified = 1;
+  state->move_vec.modified |= flmod_move;
 }
 
 static unsigned int
@@ -182,6 +192,6 @@ renderer_rotate(struct gl_renderer *state, int side)
   }
   if (angle_delta != 0.0f) {
     state->move_vec.rotation += angle_delta;
-    state->move_vec.modified = 1;
+    state->move_vec.modified |= flmod_rotation;
   }
 }
