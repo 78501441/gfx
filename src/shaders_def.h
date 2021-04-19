@@ -19,31 +19,35 @@ static const char aqua_shader_src_[] =
     "  out_color = vec4(0.0f, 0.75f, 0.58f, 0.0f);\n"
     "}\n";
 
-const float positions[] =
-    {0.0f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f};
+const float positions[] = {0.0f,
+                           0.5f,
+                           0.0f,
+                           0.5f,
+                           -0.5f,
+                           0.0f,
+                           -0.5f,
+                           -0.5f,
+                           0.0f,
+                           0.85f,
+                           0.5f,
+                           0.0f};
 
 const float colors[] = {0.9f, 0.0f, 0.0f, 0.0f, 0.9f, 0.0f, 0.0f, 0.0f, 0.9f};
 
-const float tri_vertexes[] = {0.0f,
-                              0.5f,
-                              0.0f, /* Co-ords. */
-                              0.9f,
-                              0.0f,
-                              0.0f, /* Color. */
+unsigned char indices[] = {0, 1, 2, 0, 1, 3};
 
-                              0.5f,
-                              -0.5f,
-                              0.0f,
-                              0.0f,
-                              0.9f,
-                              0.0f,
+const float tri_vertexes[] = {
+    0.0f,  0.5f,  0.0f, /* Co-ords. */
+    0.9f,  0.0f,  0.0f, /* Color. */
 
-                              -0.5f,
-                              -0.5f,
-                              0.0f,
-                              0.0f,
-                              0.0f,
-                              0.9f
+    0.5f,  -0.5f, 0.0f, /* Vert */
+    0.0f,  0.9f,  0.0f, /* Color */
+
+    -0.5f, -0.5f, 0.0f, /* Vert */
+    0.0f,  0.0f,  0.9f, /* Color */
+
+    0.33f, 0.24f, 0.0f, /* Vert */
+    0.14f, 0.0f,  0.0f  /* Color */
 
 };
 

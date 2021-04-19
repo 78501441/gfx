@@ -3,7 +3,8 @@ LINKER=ld
 CFLAGS=-Wall -g
 LIBS=-lm -lGL -lGLU -lGLEW -ldl -lX11 -lpthread
 STATIC_LIBS=static_lib/libglfw3.a static_lib/libGLEW.a
-OBJECTS=combined.o dynarray.o gfx_math.o gl_primitives.o input.o programs_list.o ranges.o renderer.o shader_load.o main.o
+C_FILES=$(subst src/,,$(wildcard src/*.c))
+O_FILES=$(subst .c,.o,$(C_FILES)) combined.o
 OBJTOOL=objcopy
 OBJTOOL_FLAGS=--input binary --output elf64-x86-64 --binary-architecture i386
 OUTPUT=gfx_demo
@@ -16,7 +17,7 @@ source_format:
 	clang-format -i src/*.c src/*.h
 
 
-$(OUTPUT): $(OBJECTS)
+$(OUTPUT): $(O_FILES)
 	$(COMPILER) $(LIBS) -o $(OUTPUT) $^ $(STATIC_LIBS)
 
 

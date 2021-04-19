@@ -2,7 +2,7 @@
 #pragma once
 
 unsigned int
-bind_new_buffer(const void *data, int data_size);
+bind_new_buffer(const void *data, int data_size, unsigned int type);
 
 unsigned int
 bind_new_vertex_array();

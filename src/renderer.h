@@ -24,6 +24,7 @@ struct gl_renderer {
 
   unsigned int box_vao;
   unsigned int scene_vao;
+  unsigned int scene_indexes;
   unsigned int box_vbo;
   unsigned int scene_vbo;
   unsigned int box_shaders;
@@ -47,4 +48,4 @@ renderer_move(struct gl_renderer *state, vec_change_type direction, float val);
 
 /* Side: -1 - left, 1 - right per 10 degrees. */
 void
-renderer_rotate(struct gl_renderer *state, int side);
+renderer_rotate(struct gl_renderer *state, int side, float angle);

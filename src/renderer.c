@@ -51,11 +51,16 @@ void
 renderer_prepare(struct gl_renderer *state)
 {
   state->box_vao = bind_new_vertex_array();
-  state->box_vbo = bind_new_buffer(state->box_data, state->box_data_size);
+  state->box_vbo =
+      bind_new_buffer(state->box_data, state->box_data_size, GL_ARRAY_BUFFER);
   new_vertex_attrib_pointerf(0, 3, 0, 0);
 
   state->scene_vao = bind_new_vertex_array();
-  state->scene_vbo = bind_new_buffer(state->scene_data, state->scene_data_size);
+  state->scene_vbo = bind_new_buffer(state->scene_data,
+                                     state->scene_data_size,
+                                     GL_ARRAY_BUFFER);
+  state->scene_indexes =
+      bind_new_buffer(indices, sizeof(indices), GL_ELEMENT_ARRAY_BUFFER);
   new_vertex_attrib_pointerf(0, 3, sizeof(float) * 6, 0);
   new_vertex_attrib_pointerf(1, 3, sizeof(float) * 6, sizeof(float) * 3);
 
@@ -84,6 +89,8 @@ renderer_render_scene(struct gl_renderer *state)
 {
 
   glClear(GL_COLOR_BUFFER_BIT);
+
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   glBindVertexArray(state->scene_vao);
   glUseProgram(state->scene_shaders);
@@ -115,7 +122,11 @@ renderer_render_scene(struct gl_renderer *state)
 
     state->tr.modified = 0;
   }
-  glDrawArrays(GL_TRIANGLES, 0, 3);
+
+  glDrawElements(GL_TRIANGLE_STRIP,
+                 sizeof(indices),
+                 GL_UNSIGNED_BYTE,
+                 (const void *)0);
 
   glBindVertexArray(state->box_vao);
   glUseProgram(state->box_shaders);
@@ -182,13 +193,13 @@ gl_error_callback(unsigned int source, unsigned int type, unsigned int id,
 #endif
 
 void
-renderer_rotate(struct gl_renderer *state, int side)
+renderer_rotate(struct gl_renderer *state, int side, float angle)
 {
   float angle_delta = 0.0f;
   if (side == 1) {
-    angle_delta = deg_to_rad(10.0f);
+    angle_delta = deg_to_rad(angle);
   } else if (side == -1) {
-    angle_delta = deg_to_rad(-10.0f);
+    angle_delta = deg_to_rad(-angle);
   }
   if (angle_delta != 0.0f) {
     state->tr.rotation += angle_delta;

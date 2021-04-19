@@ -1,15 +1,14 @@
-
 #include "../include/GL/glew.h"
 
 #include "gl_primitives.h"
 
 unsigned int
-bind_new_buffer(const void *data, int data_size)
+bind_new_buffer(const void *data, int data_size, unsigned int type)
 {
   unsigned int id = 0;
   glGenBuffers(1, &id);
-  glBindBuffer(GL_ARRAY_BUFFER, id);
-  glBufferData(GL_ARRAY_BUFFER, data_size, data, GL_STATIC_DRAW);
+  glBindBuffer(type, id);
+  glBufferData(type, data_size, data, GL_STATIC_DRAW);
   return id;
 }
 

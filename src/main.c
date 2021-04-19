@@ -48,7 +48,7 @@ main(int argc, char **argv)
   while (!glfwWindowShouldClose(main_window)) {
     glClear(GL_COLOR_BUFFER_BIT);
     if (is_animate && glfwGetTime() - last_time >= 0.2) {
-      renderer_rotate(&r, 1);
+      renderer_rotate(&r, 1, 5.0f);
       last_time = glfwGetTime();
     }
     renderer_render_scene(&r);
@@ -89,9 +89,9 @@ key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
     } else if (key == GLFW_KEY_DOWN) {
       renderer_move(r, y_changed, 0.1);
     } else if (key == GLFW_KEY_Q) {
-      renderer_rotate(r, -1);
+      renderer_rotate(r, -1, 5.0f);
     } else if (key == GLFW_KEY_E) {
-      renderer_rotate(r, 1);
+      renderer_rotate(r, 1, 5.0f);
     } else if (key == GLFW_KEY_A) {
       is_animate = 1 - is_animate;
     }
