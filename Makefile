@@ -1,7 +1,7 @@
 COMPILER=tcc
 LINKER=ld
 CFLAGS=-Wall -g
-LIBS=-lm -lGL -lGLU -lGLEW -ldl -lX11 -lpthread
+LIBS=-lm -lGL -lGLU -ldl -lX11 -lpthread
 STATIC_LIBS=static_lib/libglfw3.a static_lib/libGLEW.a
 C_FILES=$(subst src/,,$(wildcard src/*.c))
 O_FILES=$(subst .c,.o,$(C_FILES)) combined.o
