@@ -34,7 +34,9 @@ main(int argc, char **argv)
   }
   glfwMakeContextCurrent(main_window);
   struct gl_renderer r;
-  struct dynarray coords;
+  struct dynarray coords = {
+      0,
+  };
   is_animate = 0;
   read_coords("shape.txt", &coords);
   renderer_init(&r,
