@@ -9,5 +9,5 @@ struct shader_source {
 };
 
 unsigned long
-prepare_programs_list(void *storage, const char *blob_start,
+programs_list(void *storage, const char *blob_start,
                       unsigned long blob_size);

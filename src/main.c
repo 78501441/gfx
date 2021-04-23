@@ -7,6 +7,7 @@
 #include "input.h"
 #include "renderer.h"
 
+#define ANIMATE_TICK 0.045
 #define CAST_VAR(varname, type, voidptr) type varname = (type)voidptr;
 
 void
@@ -24,6 +25,10 @@ main(int argc, char **argv)
     report_glfw_error("GLFW init failed");
     exit(EXIT_FAILURE);
   }
+
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   GLFWwindow *main_window = glfwCreateWindow(400, 400, "GL", NULL, NULL);
 
@@ -47,9 +52,12 @@ main(int argc, char **argv)
   glfwSetKeyCallback(main_window, key_callback);
 
   float last_time = glfwGetTime();
+  int w, h;
   while (!glfwWindowShouldClose(main_window)) {
     glClear(GL_COLOR_BUFFER_BIT);
-    if (is_animate && glfwGetTime() - last_time >= 0.2) {
+    glfwGetFramebufferSize(main_window, &w, &h);
+    glViewport(0, 0, w, h);
+    if (is_animate && glfwGetTime() - last_time >= ANIMATE_TICK) {
       renderer_rotate(&r, 1, 5.0f);
       last_time = glfwGetTime();
     }
@@ -59,6 +67,7 @@ main(int argc, char **argv)
   }
 
   dyn_release(&coords);
+  glfwDestroyWindow(main_window);
 
   glfwTerminate();
 }
@@ -87,9 +96,9 @@ key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
     } else if (key == GLFW_KEY_RIGHT) {
       renderer_move(r, x_changed, 0.1);
     } else if (key == GLFW_KEY_UP) {
-      renderer_move(r, y_changed, -0.1);
-    } else if (key == GLFW_KEY_DOWN) {
       renderer_move(r, y_changed, 0.1);
+    } else if (key == GLFW_KEY_DOWN) {
+      renderer_move(r, y_changed, -0.1);
     } else if (key == GLFW_KEY_Q) {
       renderer_rotate(r, -1, 5.0f);
     } else if (key == GLFW_KEY_E) {

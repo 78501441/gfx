@@ -91,7 +91,7 @@ renderer_render_scene(struct gl_renderer *state)
 
   glClear(GL_COLOR_BUFFER_BIT);
 
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
   glBindVertexArray(state->scene_vao);
   glUseProgram(state->scene_shaders);
@@ -159,9 +159,7 @@ prepare_shaders()
   struct dynarray targets;
   dyn_init(&targets, sizeof(struct shader_source));
 
-  prepare_programs_list(&targets,
-                        combined_data,
-                        combined_data_end - combined_data);
+  programs_list(&targets, combined_data, combined_data_end - combined_data);
 
   unsigned int program_id =
       compile_shaders((struct shader_source *)targets.data, targets.count);

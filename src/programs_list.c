@@ -6,7 +6,7 @@
 #define DYN_P(p) ((struct dynarray *)(p))
 
 unsigned long
-prepare_programs_list(void *storage, const char *blob_start,
+programs_list(void *storage, const char *blob_start,
                       unsigned long blob_size)
 {
   const char shader_signature[] = "#shader";
