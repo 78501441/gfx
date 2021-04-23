@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../include/GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 #include "dynarray.h"
 #include "input.h"

@@ -1,4 +1,3 @@
-
 #include <math.h>
 #include <string.h>
 
@@ -16,10 +15,12 @@ get_idenitity_matrix(mat4x4 m)
 void
 get_rotation_matrix_z(mat4x4 m, float angle)
 {
-  m[0][0] = cosf(angle);
-  m[0][1] = -sinf(angle);
-  m[1][0] = sinf(angle);
-  m[1][1] = cosf(angle);
+  float c = cosf(angle);
+  float s = sinf(angle);
+  m[0][0] = c;
+  m[0][1] = -s;
+  m[1][0] = s;
+  m[1][1] = c;
 }
 
 float

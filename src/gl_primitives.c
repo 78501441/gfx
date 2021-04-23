@@ -1,4 +1,4 @@
-#include "../include/GL/glew.h"
+#include "glad/gl.h"
 
 #include "gl_primitives.h"
 

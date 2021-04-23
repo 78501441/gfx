@@ -1,13 +1,12 @@
-
 #include <alloca.h>
 #include <stdio.h>
 #include <string.h>
 
+#include <glad/gl.h>
+
 #include "dynarray.h"
 #include "programs_list.h"
 #include "shader_load.h"
-
-#include "../include/GL/glew.h"
 
 unsigned int
 compile_shaders(const struct shader_source *sources, unsigned int shaders_count)

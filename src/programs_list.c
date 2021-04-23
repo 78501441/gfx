@@ -1,12 +1,12 @@
-
-
 #include "dynarray.h"
 #include "ranges.h"
 
 #include "programs_list.h"
 
+#define DYN_P(p) ((struct dynarray *)(p))
+
 unsigned long
-prepare_programs_list(dyn_p storage, const char *blob_start,
+prepare_programs_list(void *storage, const char *blob_start,
                       unsigned long blob_size)
 {
   const char shader_signature[] = "#shader";
@@ -23,17 +23,19 @@ prepare_programs_list(dyn_p storage, const char *blob_start,
     if (!spec) {
 
       struct shader_source *last_elem =
-          &((struct shader_source *)storage->data)[storage->count - 1];
+          &((struct shader_source *)((struct dynarray *)storage)->data)
+          [DYN_P(storage)->count - 1];
 
       last_elem->length = blob_end - last_elem->start;
 
       break;
     }
 
-    if (storage->count) {
+    if (DYN_P(storage)->count) {
 
       struct shader_source *last_elem =
-          &((struct shader_source *)storage->data)[storage->count - 1];
+          &((struct shader_source *)DYN_P(storage)->data)
+          [DYN_P(storage)->count - 1];
 
       last_elem->length = spec - last_elem->start;
     }
@@ -51,5 +53,5 @@ prepare_programs_list(dyn_p storage, const char *blob_start,
 
     dyn_append(storage, &entry);
   }
-  return storage->count;
+  return DYN_P(storage)->count;
 }

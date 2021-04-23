@@ -1,7 +1,8 @@
 #include <alloca.h>
 #include <string.h>
 
-#include "../include/GL/glew.h"
+#include <glad/gl.h>
+#include <GLFW/glfw3.h>
 
 #include "dynarray.h"
 #include "gfx_math.h"
@@ -14,7 +15,7 @@
 #include "renderer.h"
 
 #ifndef NO_DEBUG
-#include "../include/GLFW/glfw3.h"
+
 #include <stdio.h>
 static void
 gl_error_callback(unsigned int source, unsigned int type, unsigned int id,
@@ -39,7 +40,7 @@ renderer_init(struct gl_renderer *state, const void *scene_data,
     state->scene_data_size = scene_data_size;
   }
 
-  glewInit();
+  gladLoadGL(glfwGetProcAddress);
 
 #ifndef NO_DEBUG
   glEnable(GL_DEBUG_OUTPUT);

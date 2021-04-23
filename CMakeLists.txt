@@ -1,8 +1,0 @@
-cmake_minimum_required(VERSION 3.10)
-project(gfx)
-file(GLOB source_files src/*.c)
-file(GLOB header_files src/*.h)
-file(GLOB static_lib_files static_lib/*.a)
-set(CMAKE_C_COMPILER_ID TinyCC)
-set(CMAKE_C_FLAGS "-Wall -g")
-add_executable(warmup ${header_files} ${source_files})
