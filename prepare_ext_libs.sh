@@ -11,8 +11,10 @@ if [ ! -d ext ]; then
 fi
 
 cd ext
-git clone 'https://github.com/glfw/glfw.git' ||
-    die "Can't clone glfw repo"
+if [ ! -d glfw ]; then
+    git clone 'https://github.com/glfw/glfw.git' ||
+        die "Can't clone glfw repo"
+fi
 
 cd glfw
 cmake -DGLFW_BUILD_TESTS=OFF -DBUILD_SHARED_LIBS=OFF . && make -j4 || die 'Failed to compile glfw'

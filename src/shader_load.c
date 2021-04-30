@@ -1,5 +1,5 @@
-#include <alloca.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <glad/gl.h>
@@ -29,11 +29,11 @@ compile_shaders(const struct shader_source *sources, unsigned int shaders_count)
 
     if (is_compiled != GL_TRUE) {
       int len;
-      char *text              = (char *)alloca(sources[i].length + 1);
+      char *text              = (char *)malloc(sources[i].length + 1);
       text[sources[i].length] = 0;
       memcpy(text, sources[i].start, sources[i].length);
       glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &len);
-      char *log = (char *)alloca(len);
+      char *log = (char *)malloc(len);
       glGetShaderInfoLog(shader_id, len, &len, log);
 
       fprintf(stderr,
@@ -41,6 +41,8 @@ compile_shaders(const struct shader_source *sources, unsigned int shaders_count)
               sources[i].type == st_vertex ? "Vertex" : "Fragment",
               log,
               text);
+      free(text);
+      free(log);
 
     } else {
 
@@ -55,9 +57,10 @@ compile_shaders(const struct shader_source *sources, unsigned int shaders_count)
     int len;
     glGetProgramiv(program, GL_INFO_LOG_LENGTH, &len);
     if (len > 0) {
-      char *log = (char *)alloca(len);
+      char *log = (char *)malloc(len);
       glGetProgramInfoLog(program, len, &len, log);
       fprintf(stderr, "Program linking error:\n%s\n", log);
+      free(log);
     }
   }
 #ifndef NO_DEBUG
